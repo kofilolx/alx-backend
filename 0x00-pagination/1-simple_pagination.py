@@ -6,19 +6,11 @@ from typing import List, Tuple
 
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
+    """Retrieves the index range from a given page and page size.
     """
-    Calculate the start and end indices for the pagination range.
-
-    Args:
-        page (int): The page number (1-indexed).
-        page_size (int): The size of each page.
-
-    Returns:
-        tuple: A tuple containing the start index and the end index (exclusive).
-    """
-    start_index = (page - 1) * page_size
-    end_index = page * page_size
-    return (start_index, end_inedx)
+    start = (page - 1) * page_size
+    end = start + page_size
+    return (start, end)
 
 
 class Server:
@@ -43,19 +35,12 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
-        """Returns a page of the dataset.
-        
-        Args:
-            page (int): The page number (1-indexed).
-            page_size (int): The number of items per page.
-
-        Returns:
-            List[List]: A list of rows corresponding to the specified page.
+        """Retrieves a page of data.
         """
         assert type(page) == int and type(page_size) == int
         assert page > 0 and page_size > 0
-        start_index, end_index = index_range(page, page_size)
+        start, end = index_range(page, page_size)
         data = self.dataset()
-        if start_index > len(data):
+        if start > len(data):
             return []
-        return data[start_index:end_index]
+        return data[start:end]
